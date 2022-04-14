@@ -21,12 +21,30 @@ contract MyEpicGame {
     // arr to hold default data for characters
 CharacterAttributes[] defaultCharacters;
 
-//  holds data for intialising game state to pass into run.js
-    constructor(
+//  constructor RUNS ONCE holds data for intialising game state to pass into run.js
+constructor(
        string[] memory characterNames,
        string[] memory characterImageURIs,
        uint[] memory characterHp,
-       uint[] memory characterAttackDmg
+       uint[] memory characterAttackDmg,
+       uint[] memory characterDefence
     )
+    {
+        for (uint i = 0; i < characterNames.length; i += 1){
+            defaultCharacters.push(CharacterAttributes({
+                characterIndex: i;
+                name: characterNames[i],
+                imageURI: characterImageURIs[i],
+                hp: characterHp[i],
+                attackDamage: characterAttackDmg[i],
+                defence: characterDefence
+            }));
+            CharacterAttributes memory c = defaultCharacters[i];
+            console.log("Done intiliasing %s w/HP %s, img %s", c.name, c.hp, c.imageURI);
+        }
+    }
 }
+
+
+
 
