@@ -10,7 +10,7 @@ import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 // Helper functions OpenZeppelin provides.
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
-
+import "./libraries/Base64.sol";
 
 // Helps with debugging smart contracts
 import "hardhat/console.sol";
@@ -93,6 +93,30 @@ nftHolders[msg.sender] = newItemId;
  _tokenIds.increment();
 
     }
+    function tokenURI(uint256 _tokenId) public view override returns (string memory) {
+        CharacterAttributes memory charAttributes = nftHolderAttributes[_tokenId];
+
+        string memory strHp = Strings.toString(charAttributes.hp);
+        string memory strMaxHp = Strings.toString(charAttributes.MaxHp);
+        string memory strAttackDamage = Strings.toString(charAttributes.attackDamage);
+    string memory json = Base64.encode(
+        abi.encodePacked(
+            '{"Name": "',
+            charAttributes.name,
+            '--NFT #: ',
+            Strings.toString(_tokenId),
+            '", "description": "This is an NFT that lets people play in the game BadAss Slayer!", "image": "',
+      charAttributes.imageURI,
+      '", "attributes": [ { "trait_type": "Health Points", "value": ',strHp,', "max_value":',strMaxHp,'}, { "trait_type": "Attack Damage", "value": ',
+      strAttackDamage,'} ]}'
+        )
+    );
+
+    string memory output = string(
+        abi.encodePacked("data:application/json;base64,", json)
+    );
+    
+    return output;
 }
 
 
