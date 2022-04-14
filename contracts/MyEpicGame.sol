@@ -16,7 +16,6 @@ contract MyEpicGame {
         uint hp;
         uint maxHp;
         uint attackDamage;
-        uint defence;
     }
     // arr to hold default data for characters
 CharacterAttributes[] defaultCharacters;
@@ -26,18 +25,18 @@ constructor(
        string[] memory characterNames,
        string[] memory characterImageURIs,
        uint[] memory characterHp,
-       uint[] memory characterAttackDmg,
-       uint[] memory characterDefence
+       uint[] memory characterAttackDmg
+     
     )
     {
         for (uint i = 0; i < characterNames.length; i += 1){
             defaultCharacters.push(CharacterAttributes({
-                characterIndex: i;
+                characterIndex: i,
                 name: characterNames[i],
                 imageURI: characterImageURIs[i],
                 hp: characterHp[i],
-                attackDamage: characterAttackDmg[i],
-                defence: characterDefence
+                maxHp: characterHp[i],
+                attackDamage: characterAttackDmg[i]
             }));
             CharacterAttributes memory c = defaultCharacters[i];
             console.log("Done intiliasing %s w/HP %s, img %s", c.name, c.hp, c.imageURI);
