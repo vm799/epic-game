@@ -93,34 +93,7 @@ nftHolders[msg.sender] = newItemId;
  _tokenIds.increment();
 
     }
-//     function tokenURI(uint256 _tokenId) public view override returns (string memory) {
-//         CharacterAttributes memory charAttributes = nftHolderAttributes[_tokenId];
 
-//         string memory strHp = Strings.toString(charAttributes.hp);
-//         string memory strMaxHp = Strings.toString(charAttributes.MaxHp);
-//         string memory strAttackDamage = Strings.toString(charAttributes.attackDamage);
-    
-//     //abi.encodePacked combines strings dynamically
-
-//     string memory json = Base64.encode(
-//         abi.encodePacked(
-//             '{"Name": "',
-//             charAttributes.name,
-//             '--NFT #: ',
-//             Strings.toString(_tokenId),
-//             '", "description": "This is an NFT that lets people play in the game BadAss Slayer!", "image": "',
-//       charAttributes.imageURI,
-//       '", "attributes": [ { "trait_type": "Health Points", "value": ',strHp,', "max_value":',strMaxHp,'}, { "trait_type": "Attack Damage", "value": ',
-//       strAttackDamage,'} ]}'
-//         )
-//     );
-
-//      string memory output = string(
-//     abi.encodePacked("data:application/json;base64," , json)
-//   );
-
-//     return output;
-// }
 
 function tokenURI(uint256 _tokenId) public view override returns (string memory) {
   CharacterAttributes memory charAttributes = nftHolderAttributes[_tokenId];
@@ -135,7 +108,7 @@ function tokenURI(uint256 _tokenId) public view override returns (string memory)
       charAttributes.name,
       ' -- NFT #: ',
       Strings.toString(_tokenId),
-      '", "description": "This is an NFT that lets people play in the game Metaverse Slayer!", "image": "',
+      '", "description": "This is an NFT that lets people play in the game BadAss Slayer!", "image": "',
       charAttributes.imageURI,
       '", "attributes": [ { "trait_type": "Health Points", "value": ',strHp,', "max_value":',strMaxHp,'}, { "trait_type": "Attack Damage", "value": ',
       strAttackDamage,'} ]}'
@@ -147,6 +120,7 @@ function tokenURI(uint256 _tokenId) public view override returns (string memory)
   );
   
   return output;
+}
 }
 
 
