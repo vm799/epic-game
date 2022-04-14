@@ -26,6 +26,19 @@ contract MyEpicGame is ERC721 {
         uint maxHp;
         uint attackDamage;
     }
+
+    struct BigBoss {
+    string name;
+    string imageURI;
+    uint hp;
+    uint maxHp;
+    uint attackDamage;
+}  
+console.log("Minted NFT w/ tokenId %s and characterIndex %s", newItemId, _characterIndex);
+
+BigBoss public bigBoss;
+
+
 // unique NFT identifier
     using Counters for Counters.Counter;
     Counters.Counter private _tokenIds;
@@ -45,12 +58,25 @@ constructor(
        string[] memory characterNames,
        string[] memory characterImageURIs,
        uint[] memory characterHp,
-       uint[] memory characterAttackDmg
-     
+       uint[] memory characterAttackDmg,
+     string memory bossName, // These new variables would be passed in via run.js or deploy.js.
+  string memory bossImageURI,
+  uint bossHp,
+  uint bossAttackDamage
     )
 
     ERC721("Badasses", "Badass")
     {
+
+        bigBoss = BigBoss({
+    name: bossName,
+    imageURI: bossImageURI,
+    hp: bossHp,
+    maxHp: bossHp,
+    attackDamage: bossAttackDamage
+        });
+console.log("Done initializing boss %s w/ HP %s, img %s", bigBoss.name, bigBoss.hp, bigBoss.imageURI);
+
         for (uint i = 0; i < characterNames.length; i += 1){
             defaultCharacters.push(CharacterAttributes({
                 characterIndex: i,
@@ -68,6 +94,7 @@ constructor(
         // incrementing the nfts
         _tokenIds.increment();
     }
+
     function mintCharacterNFT(uint _characterIndex) external {
         uint256 newItemId = _tokenIds.current();
 
@@ -84,7 +111,19 @@ nftHolderAttributes[newItemId] = CharacterAttributes({
       attackDamage: defaultCharacters[_characterIndex].attackDamage
 });
 
-console.log("Minted NFT w/ tokenId %s and characterIndex %s", newItemId, _characterIndex);
+
+function attackBoss() public {
+
+  // Get the state of the player's NFT.
+  uint256 nftTokenIdOfPlayer = nftHolders[msg.sender];
+  CharacterAttributes storage player = nftHolderAttributes[nftTokenIdOfPlayer];
+  console.log("\nPlayer w/ character %s about to attack. Has %s HP and %s AD", player.name, player.hp, player.attackDamage);
+  console.log("Boss %s has %s HP and %s AD", bigBoss.name, bigBoss.hp, bigBoss.attackDamage);
+  // Make sure the player has more than 0 HP.
+  // Make sure the boss has more than 0 HP.
+  // Allow player to attack boss.
+  // Allow boss to attack player.
+}
 
 // keep track of who owns the nft
 nftHolders[msg.sender] = newItemId;

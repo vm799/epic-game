@@ -3,7 +3,7 @@
     // on a local ethereum network
     // once deployed, can be tested with fake miners and constructor will run
     // contract address will be generated.
-
+    // https://rinkeby.rarible.com/token/0xED6193B84153E9f2FA6E361209b813d0D1FE2aa9:1
 
     const main = async () =>{
         const gameContractFactory = await hre.ethers.getContractFactory('MyEpicGame');
