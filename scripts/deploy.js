@@ -13,30 +13,14 @@
             "https://i.imgur.com/aDIUIUd.jpeg",
             "https://i.imgur.com/3ByvYV2.jpeg"],
             [100,200,300],  //HP values
-            [100,50,25]      //Attack damage values
+             [100,50,25],     //Attack damage values
+        "The Terminator",
+        "https://i.imgur.com/xTF778g.png",
+        10000,
+        50
         );
         await gameContract.deployed();
         console.log("Contract deployed to:", gameContract.address);
-    
-let txn;
-  
-txn = await gameContract.mintCharacterNFT(0);
-  await txn.wait();
-  console.log("Minted NFT #1");
-
-  txn = await gameContract.mintCharacterNFT(1);
-  await txn.wait();
-  console.log("Minted NFT #2");
-
-  txn = await gameContract.mintCharacterNFT(2);
-  await txn.wait();
-  console.log("Minted NFT #3");
-
-  txn = await gameContract.mintCharacterNFT(1);
-  await txn.wait();
-  console.log("Minted NFT #4");
-
-  console.log("Done deploying and minting!");
     };
     
     const runMain = async ()=>{
