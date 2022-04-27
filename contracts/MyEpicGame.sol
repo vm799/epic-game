@@ -35,7 +35,6 @@ contract MyEpicGame is ERC721 {
     uint attackDamage;
 }  
 
-BigBoss public bigBoss;
 // console.log("Minted NFT w/ tokenId %s and characterIndex %s", newItemId, _characterIndex);
 
 
@@ -45,12 +44,17 @@ BigBoss public bigBoss;
 
 // arr to hold default data for characters
 CharacterAttributes[] defaultCharacters;
+BigBoss public bigBoss;
 
 // map the nft's tokenId : nft attributes
 mapping(uint256 => CharacterAttributes) public nftHolderAttributes;
 
 //map the nft to an address: nft tokenID, can track and manage owner of nft
 mapping(address => uint256) public nftHolders;
+
+event CharacterNFTMinted(address sender, uint256 tokenId, uint256 characterIndex);
+event AttackComplete(uint newBossHp, uint newPlayerHp);
+
 
 
 //  constructor RUNS ONCE holds data for intialising game state to pass into run.js
@@ -68,7 +72,7 @@ constructor(
     ERC721("Badasses", "Badass")
     {
 
-        bigBoss = BigBoss({
+    bigBoss = BigBoss({
     name: bossName,
     imageURI: bossImageURI,
     hp: bossHp,
@@ -94,8 +98,9 @@ console.log("Done initializing boss %s w/ HP %s, img %s", bigBoss.name, bigBoss.
         // incrementing the nfts
         _tokenIds.increment();
     }
+    
 
-    function mintCharacterNFT(uint _characterIndex) external {
+function mintCharacterNFT(uint _characterIndex) external {
         uint256 newItemId = _tokenIds.current();
 
         // assigns the tokenId to callers wallet using solidity variable that gives access 
@@ -110,7 +115,15 @@ nftHolderAttributes[newItemId] = CharacterAttributes({
       maxHp: defaultCharacters[_characterIndex].maxHp,
       attackDamage: defaultCharacters[_characterIndex].attackDamage
 });
+console.log("Minted NFT w/ tokenId %s and characterIndex %s", newItemId, _characterIndex);
+// keep track of who owns the nft
+nftHolders[msg.sender] = newItemId;
+//fx from OpenZeppelin
+ _tokenIds.increment();
 
+ emit CharacterNFTMinted(msg.sender, newItemId, _characterIndex);
+    
+}
 
 function attackBoss() public {
 
@@ -139,21 +152,13 @@ function attackBoss() public {
   if (player.hp < bigBoss.attackDamage){
       player.hp = 0;
   } else {
-      player.hp = player.hp = bigBoss.attackDamage;
+      player.hp = player.hp - bigBoss.attackDamage;
   }
 
+    emit AttackComplete(bigBoss.hp, player.hp);
     console.log("Player attacked boss. New boss hp: %s", bigBoss.hp);
     console.log("Boss attacked player. New player hp: %s\n", player.hp);
-
 }
-
-// keep track of who owns the nft
-nftHolders[msg.sender] = newItemId;
-
-//fx from OpenZeppelin
- _tokenIds.increment();
-
-    }
 
 
 function tokenURI(uint256 _tokenId) public view override returns (string memory) {
@@ -182,6 +187,30 @@ function tokenURI(uint256 _tokenId) public view override returns (string memory)
   
   return output;
 }
+
+function checkIfUserHasNFT() public view returns (CharacterAttributes memory) {
+ // Get the tokenId of the user's character NFT
+uint256 userNftTokenId = nftHolders[msg.sender];
+  // If the user has a tokenId in the map, return their character.
+if (userNftTokenId > 0) {
+    return nftHolderAttributes[userNftTokenId];
 }
+  // Else, return an empty character.
+  else {
+        CharacterAttributes memory emptyStruct;
+        return emptyStruct;
+  }
+}
+
+
+function getAllDefaultCharacters() public view returns (CharacterAttributes[] memory){
+return defaultCharacters;
+}
+
+function getBigBoss() public view returns (BigBoss memory){
+return bigBoss;
+}
+}
+
 
 
